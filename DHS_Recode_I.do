@@ -35,13 +35,13 @@ global DO "${root}/STATA/DO/SC/DHS/Recode-I"
 * Define the country names (in globals) in by Recode
 do "${DO}/0_GLOBAL.do"
 
-// Bolivia1989    Botswana1988    Brazil1986  Burundi1987 Colombia1986 
-// DominicanRepublic1986 Ecuador1987 Egypt1988 ElSalvador1985 Ghana1988         	 
-// Guatemala1987 Indonesia1987 Kenya1989 Liberia1986 Mali1987  Mexico1987  Morocco1987 
-// Peru1986 Senegal1986 SriLanka1987 Sudan1989  Thailand1987  Togo1988 
-// TrinidadandTobago1987  Tunisia1988 Uganda1988  Zimbabwe1988         
+// Bolivia1989  Brazil1986  Burundi1987 Colombia1986 DominicanRepublic1986 Ecuador1987 Egypt1988  Ghana1988 // Guatemala1987   
+// Indonesia1987 Kenya1989 Liberia1986 Mali1987  Mexico1987  Morocco1987 
+// Peru1986 Senegal1986 SriLanka1987   Togo1988 
+// Sudan1989  Thailand1987 TrinidadandTobago1987 Tunisia1988 Uganda1988  Zimbabwe1988         
 
-foreach name in   DominicanRepublic1986 { //{
+// Bolivia1989   Burundi1987 Colombia1986 DominicanRepublic1986 Ecuador1987 Egypt1988  Ghana1988 Guatemala1987  Indonesia1987 Kenya1989 Liberia1986 Mali1987  Sudan1989  Thailand1987 TrinidadandTobago1987   Uganda1988  Zimbabwe1988     
+foreach name in DominicanRepublic1986 Ecuador1987 Egypt1988  Ghana1988{ //{
 
 tempfile birth ind men hm hiv hh wi zsc iso  hmhh
 
@@ -127,7 +127,7 @@ use "${SOURCE}/DHS-`name'/DHS-`name'birth.dta", clear
     do "${DO}/1_antenatal_care"
     do "${DO}/2_delivery_care"
     do "${DO}/3_postnatal_care"
-    do "${DO}/7_child_vaccination"
+    do "${DO}/7_child_vaccinationr"
     do "${DO}/8_child_illness"
     do "${DO}/10_child_mortality"
     do "${DO}/11_child_other"
@@ -434,11 +434,12 @@ restore
     if _rc == 0 {
     erase "${INTER}/zsc_hm.dta"
     }	  
-	
+/*	
 capture confirm file "${SOURCE}/DHS-`name'/DHS-`name'hm2.dta"
 if _rc == 0 {
 erase "${SOURCE}/DHS-`name'/DHS-`name'hm2.dta"
 }
+*/
 save "${OUT}/DHS-`name'.dta", replace   
 }
 

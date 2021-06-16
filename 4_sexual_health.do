@@ -29,7 +29,7 @@
     }
 
 	*w_CPR: Use of modern contraceptive methods of women age 15(!)-49 married or living in union
-	gen w_CPR=(v313==3)
+	gen w_CPR=(v313==2)
     replace w_CPR=. if v313==.
     replace w_CPR=. if w_married!=1
 	

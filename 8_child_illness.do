@@ -32,6 +32,14 @@ order *,sequential  //make sure variables are in order.
 *c_diarrhea_pro	The treatment was provided by a formal provider (all public provider except other public, pharmacy, and private sector)
        /*please cross check as there might be case where the diarreha treatment provider is not in h12a-h12x*/
 	  gen c_diarrhea_pro = inlist(h12,1,2,3) if h12!=. & c_diarrhea == 1
+	  if inlist(name,"Uganda1988"){
+		label define h12 1 "private doctor" 2 "Hospital/clinic" 3 "Traditional Doctor" 4 "Other" 5 "No"
+		label values h12 h12
+	  }
+	  if inlist(name,"Tunisia1988"){
+		replace c_diarrhea_pro = 1 if inlist(h12,4) & c_diarrhea == 1 // dispensaire
+	  }
+	  
 		/*order h12a-h12x,sequential
 	    foreach var of varlist h12a-h12x {
 	    local lab: variable label `var' 	   
@@ -54,9 +62,12 @@ order *,sequential  //make sure variables are in order.
 		*/
 *c_diarrhea_mof	Child with diarrhea received more fluids
 		gen c_diarrhea_mof=h16 ==1 if !inlist(h16,.,8) & c_diarrhea == 1
+		if inlist(name,"Uganda1988"){
+			replace c_diarrhea_mof = . if s424e==8
+		}
 
 *c_diarrhea_medfor Get formal medicine except (ors hmf home other_med, country specific). 
-		gen c_diarrhea_medfor = . //h15 if c_diarrhea == 1
+		gen c_diarrhea_medfor =  h15 if c_diarrhea == 1 //  tablets,injections,syrup
 /*
         egen medfor = rowtotal(h12z h15 h15a h15b h15c h15e h15g h15h ),mi
 		gen c_diarrhea_medfor = ( medfor > = 1 ) if c_diarrhea == 1 & medfor!=.
@@ -64,7 +75,10 @@ order *,sequential  //make sure variables are in order.
 		replace c_diarrhea_medfor = . if inlist(h12z,8,9) |inlist(h15,8,9)|inlist(h15a,8,9)|inlist(h15b,8,9)|inlist(h15c,8,9)|inlist(h15e,8,9)|inlist(h15g,8,9)|inlist(h15h,8,9)
 */
 *c_diarrhea_med	Child with diarrhea received any medicine other than ORS or hmf (country specific)
-		gen c_diarrhea_med = . //h15  if c_diarrhea == 1
+		gen c_diarrhea_med = h15  if c_diarrhea == 1
+		if inlist(name,"Tunisia1988"){
+			replace c_diarrhea_med = 1 if s542d==1 | s542e==1 // oralyte & other
+		}
  /*       egen med = rowtotal(h12z h15 h15a h15b h15c h15d h15e h15f h15g h15h),mi
         gen c_diarrhea_med = ( med > = 1 ) if c_diarrhea == 1 & med!=.
         replace c_diarrhea_med = . if inlist(h12z,8,9) |inlist(h15,8,9)|inlist(h15a,8,9)|inlist(h15b,8,9)|inlist(h15c,8,9)|inlist(h15d,8,9)|inlist(h15e,8,9)|inlist(h15f,8,9)|inlist(h15g,8,9)|inlist(h15h,8,9)

@@ -448,21 +448,24 @@
 		gen hv000 = "UG"
 	}
 	if inlist(name,"Zimbabwe1988"){
-		sreshape long $namenew ,  i(hprov hstrata hsegment hhnumber) j(hvidx_alt)
+		sreshape long $namenew ,  i(hsegment hhnumber) j(hvidx_alt)
 	
-		ren (hprov hstrata hsegment hhnumber hline) (hv001 hm_shstruct1 hm_shstruct2 hv002 hvidx)
+		ren (hsegment hhnumber hline) (hv001  hv002 hvidx)
+		gen hm_shstruct1 = 999
+		gen hm_shstruct2 = 999
 		drop if hvidx == . 
-		tostring hv001 hm_shstruct1 hm_shstruct2 hv002, gen(hv001_alt hm_shstruct1_alt hm_shstruct2_alt hv002_alt)
-		foreach k in hv001 hm_shstruct1 hm_shstruct2 hv002 {
+		tostring hv001 hv002, gen(hv001_alt hv002_alt)
+		foreach k in hv001 hv002 {
 			replace `k'_alt = " "+`k'_alt if inrange(`k',0,9)
 			replace `k'_alt = " "+`k'_alt if inrange(`k',0,99)
 			replace `k'_alt = " "+`k'_alt if inrange(`k',0,999)
 		}
-		gen hhid = hv001_alt+hm_shstruct1_alt+hm_shstruct2_alt+hv002_alt
+		gen hhid = hv001_alt+hv002_alt
 		order hhid hvidx
 		isid hhid hvidx
 		ren (hsex  hage hslep dohc) (hv104 hv105  hv103 hv008)
 		ren (hmembers) (hv009)
-		clonevar hv024 = hv001
+		clonevar hv024 = hprov
+		gen hv000 = "ZW"
 	}	
 	cap drop *alt

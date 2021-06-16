@@ -46,11 +46,11 @@ preserve
 
 	
 ***for variables generated from 7_child_vaccination
-	foreach var of var c_bcg c_dpt1 c_dpt2 c_dpt3 c_fullimm c_measles ///
+/*	foreach var of var c_bcg c_dpt1 c_dpt2 c_dpt3 c_fullimm c_measles ///
 	c_polio1 c_polio2 c_polio3{
     replace `var' = . if !inrange(hm_age_mon,12,23)
     }
-
+*/
 ***for variables generated from 8_child_illness	
 	foreach var of var c_ari2 c_diarrhea 	c_diarrhea_hmf	c_diarrhea_medfor	c_diarrhea_mof	c_diarrhea_pro	c_diarrheaact ///
 	c_diarrheaact_q	c_fever	c_fevertreat	c_illness	c_illtreat	c_sevdiarrhea	c_sevdiarrheatreat ///

@@ -8,11 +8,6 @@
 		replace c_measles = 1 if (h9 ==1 | h9 ==2 | h9 ==3)  
      	replace c_measles = 0 if (h9 ==0 | h9 ==8 | h9 ==9)   	
 
-if inlist(name,"Azerbaijan2006"){
-		replace c_measles = 1 if (h9 ==1 | h9 ==2 | h9 ==3 | inrange(s506mr,1,3))  
-     	replace c_measles = 0 if h9 ==0 & s506mr == 0  
-		}
-	
 *c_dpt1	child	Child received DPT1/Pentavalent 1 vaccination	
         gen c_dpt1  = . 
 		replace c_dpt1  = 1 if (h3 ==1 | h3 ==2 | h3 ==3)  
@@ -52,37 +47,6 @@ if inlist(name,"Azerbaijan2006"){
 		replace c_polio3  = 1 if (h8 ==1 | h8 ==2 | h8 ==3)  
 		replace c_polio3  = 0 if (h8 ==0 | h8 ==8 | h8 ==9)  
 		
-	if inlist(name,"BurkinaFaso1993"){
-		drop c_bcg c_measles c_polio1 c_polio2 c_polio3 c_dpt1 c_dpt2 c_dpt3
-		
-		gen c_bcg  = . 
-		replace c_bcg  = 1 if inrange(h2,1,3)|inrange(s4b,1,3)  
-		replace c_bcg  = 0 if h2 ==0  & s4b == 0  	
-		
-		gen c_measles  =. 
-		replace c_measles = 1 if inrange(h9,1,3) | inrange(s4m,1,3)  
-		replace c_measles = 0 if h9 ==0 & s4m==0
-
-		gen c_polio1  = .  
-		replace c_polio1  = 1 if inrange(h4,1,3) | inrange(s4p1,1,3)  
-		replace c_polio1  = 0 if h4 ==0 & s4p1==0
-		gen c_polio2  = .  
-		replace c_polio2  = 1 if inrange(h6,1,3) | inrange(s4p2,1,3)  
-		replace c_polio2  = 0 if h6 ==0  & s4p2==0
-		gen c_polio3  = .  
-		replace c_polio3  = 1 if inrange(h8,1,3) | inrange(s4p3,1,3)  
-		replace c_polio3  = 0 if h8 ==0  & s4p3==0
-
-		gen c_dpt1 =.
-		replace c_dpt1  = 1 if inrange(h3,1,3)|inrange(s4d1,1,3)
-		replace c_dpt1  = 0 if h3 == 0 & s4d1 == 0  
-		gen c_dpt2 =.
-		replace c_dpt2  = 1 if inrange(h5,1,3)|inrange(s4d2,1,3)
-		replace c_dpt2  = 0 if h5 == 0 & s4d2 == 0  
-		gen c_dpt3 =.
-		replace c_dpt3  = 1 if inrange(h7,1,3)|inrange(s4d3,1,3)
-		replace c_dpt3  = 0 if h7 == 0 & s4d3 == 0  
-	}
 		
 *c_fullimm	child			Child fully vaccinated						
 		gen c_fullimm =.  										/*Note: polio0 is not part of allvacc- see DHS final report*/

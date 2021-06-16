@@ -18,33 +18,48 @@ order *,sequential  //make sure variables are in order.
 
 	gen c_sba = 0 if !inlist(m3,.,0,99,98)
 	replace c_sba = 1 if ///
-	!(!regexm(m3_lab,"doctor|nurse|midwife|aide soignante|assistante accoucheuse|clinical officer|mch aide|trained|auxiliary birth attendant|physician assistant|professional|ferdsher|skilled|community health care provider|birth attendant|hospital/health center worker|hew|auxiliary|icds|feldsher|mch|vhw|village health team|health personnel|gynecolog(ist|y)|obstetrician|internist|pediatrician|family welfare visitor|medical assistant|health assistant") ///
-	|regexm(m3_lab,"na^|-na|traditional birth attendant|untrained|unquallified|empirical midwife") )
+	!(!regexm(m3_lab,"doctor|nurse|midwife|aide soignante|assistante accoucheuse|clinical officer|mch aide|trained|auxiliary birth attendant|medicin|hopital, pmi, disp|matrone, acc. aux.|sage-femme|physician assistant|professional|ferdsher|skilled|community health care provider|birth attendant|hospital/health center worker|hew|auxiliary|icds|feldsher|mch|vhw|village health team|health personnel|gynecolog(ist|y)|obstetrician|internist|pediatrician|family welfare visitor|medical assistant|health assistant") ///
+	|regexm(m3_lab,"na^|-na|traditional birth attendant|untrained|unquallified|traditional midwife|birth attendant|empirical midwife") )
 
 	/* do consider as skilled if contain words in 
 	   the first group but don't contain any words in the second group */
 
 	*c_hospdel: child born in hospital of births in last 2 years  
 	gen c_hospdel = .
-	/*
-	decode m15, gen(m15_lab)
-	replace m15_lab = lower(m15_lab)
-	
-	gen c_hospdel = 0 if !mi(m15)
-	replace c_hospdel = 1 if ///
-    regexm(m15_lab,"medical college|surgical") | ///
-	regexm(m15_lab,"hospital") & !regexm(m15_lab,"center|sub-center|post|clinic")
-	replace c_hospdel = . if mi(m15) | inlist(m15,98,99) | mi(m15_lab)	
-    // please check this indicator in case it's country specific	
-	*/
 	*c_facdel: child born in formal health facility of births in last 2 years
 	gen c_facdel = . 
-	/*
-	gen c_facdel = 0 if !mi(m15)
-	replace c_facdel = 1 if regexm(m15_lab,"hospital") | ///
-	!regexm(m15_lab,"home|other private|other$|pharmacy|non medical|private nurse|religious|abroad")
-	replace c_facdel = . if mi(m15) | inlist(m15,98,99) | mi(m15_lab)
-	*/
+	
+	if inlist(name,"SriLanka1987"){
+		ren s406 m15
+	}
+	if inlist(name,"Thailand1987"){	
+		ren s405a m15	
+	}
+	if inlist(name,"Tunisia1988"){	
+		ren s507 m15	
+	}
+	if inlist(name,"Zimbabwe1988"){	
+		ren s405 m15	
+	}
+	
+	if inlist(name,"Tunisia1988","Zimbabwe1988"){	
+		drop c_hospdel c_facdel 
+		decode m15, gen(m15_lab)
+		replace m15_lab = lower(m15_lab)
+		
+		gen c_hospdel = 0 if !mi(m15)
+		replace c_hospdel = 1 if ///
+		regexm(m15_lab,"medical college|surgical") | ///
+		regexm(m15_lab,"hospital") & !regexm(m15_lab,"center|sub-center|post|clinic")
+		replace c_hospdel = . if mi(m15) | inlist(m15,98,99) | mi(m15_lab)	
+		// please check this indicator in case it's country specific	
+		gen c_facdel = 0 if !mi(m15)
+		replace c_facdel = 1 if regexm(m15_lab,"hospital") | ///
+		!regexm(m15_lab,"home|other private|other$|pharmacy|non medical|private nurse|religious|abroad")
+		replace c_facdel = . if mi(m15) | inlist(m15,98,99) | mi(m15_lab)
+		// please check this indicator in case it's country specific	
+	}
+
 	*c_earlybreast: child breastfed within 1 hours of birth of births in last 2 years
 	gen c_earlybreast = .
 		
@@ -57,6 +72,7 @@ order *,sequential  //make sure variables are in order.
 	
 	*c_caesarean: Last birth in last 2 years delivered through caesarean                    
 	gen c_caesarean = . 
+
 	/*clonevar c_caesarean = m17
 	replace c_caesarean = . if c_caesarean == 9 */
     *c_sba_eff1: Effective delivery care (baby delivered in facility, by skilled provider, mother and child stay in facility for min. 24h, breastfeeding initiated in first 1h after birth)

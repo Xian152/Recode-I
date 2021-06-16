@@ -13,6 +13,11 @@ order *,sequential
 
 	*c_anc_any: any antenatal care visits of births in last 2 years
 	gen c_anc_any = .            //Children under 5 in country where malaria is endemic (only in countries with endemic)
+	
+	if inlist(name,"Tunisia1988"){
+		replace c_anc = inrange(s504,1,4) if s504<98  // s503 = m2n
+		replace c_anc_any = inrange(s504,1,15) if s504<98 
+	}
 
 	*c_anc_ear: First antenatal care visit in first trimester of pregnancy of births in last 2 years
 	gen c_anc_ear = .            //Children under 5 in country where malaria is endemic (only in countries with endemic)	
@@ -21,18 +26,18 @@ order *,sequential
 	gen c_anc_ear_q = c_anc_ear if c_anc_any==1
 	
 	*c_anc_ski: antenatal care visit with skilled provider for pregnancy of births in last 2 years
-	if inlist(name,"Burundi1987"){
+	if inlist(name,"Brazil1986","Burundi1987","Indonesia1987","SriLanka1987"){
 		gen c_anc_ski = . 
 	}
-	if !inlist(name,"Burundi1987"){
+	if !inlist(name,"Brazil1986","Burundi1987","Indonesia1987","SriLanka1987"){
 	decode m2, gen(m2_lab)
 	replace m2_lab = lower(m2_lab)
 	
 	gen c_anc_ski = 0 if !inlist(m2,.,0,99,98)
 	replace c_anc_ski = 1 if ///
     !(!regexm(m2_lab,"trained") & ///
-	(!regexm(m2_lab,"doctor|nurse|midwife|aide soignante|assistante accoucheuse|clinical officer|mch aide|auxiliary birth attendant|physician assistant|professional|ferdsher|skilled|community health care provider|birth attendant|hospital/health center worker|hew|auxiliary|icds|feldsher|mch|vhw|village health team|health personnel|gynecolog(ist|y)|obstetrician|internist|pediatrician|family welfare visitor|medical assistant|health assistant") ///
-	|regexm(m2_lab,"na^|-na|traditional birth attendant|untrained|unquallified|empirical midwife") ) )
+	(!regexm(m2_lab,"doctor|nurse|midwife|matrone|aide soignante|assistante accoucheuse|clinical officer|mch aide|auxiliary birth attendant|physician assistant|professional|ferdsher|skilled|community health care provider|birth attendant|hospital/health center worker|hew|auxiliary|icds|feldsher|mch|vhw|village health team|health personnel|gynecolog(ist|y)|obstetrician|internist|pediatrician|family welfare visitor|medical assistant|health assistant") ///
+	|regexm(m2_lab,"na^|-na|traditional birth attendant|untrained|birth attendant|traditional midwife|unquallified|empirical midwife") ) )
 	
 	/* do consider as skilled if contain words in 
 	   the second group but don't contain any words in the first group */
